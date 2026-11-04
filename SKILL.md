@@ -64,7 +64,7 @@ Phase 7 完成、SVG 包交付后，进入 Phase 8。
    - 单值 `stroke-dasharray="4"` → 规范化为 `"4 4"`（SVG 语义等值，零视觉变化）。
 5. 导出：`$PY_PPTX $MS/svg_to_pptx.py <proj> --no-notes`，产物 `exports/<proj>_<HHMMSS>.pptx`；postflight `passed-with-warnings` 可接受，`quality_gate=passed` 为准。
 6. 注入演讲备注：`$PY_PPTX <FORGE>/tools/inject_notes.py <导出.pptx> <RUN_DIR>/output/speaker-notes.md <定稿.pptx>`。
-7. 回渲验收：LibreOffice 转 PDF（**必须带独立 profile**：`soffice -env:UserInstallation=file:///<临时目录>/lo-profile --headless --convert-to pdf …`；用默认 profile 在部分 Windows 环境会崩（0xC0000409），也会与已打开的 LibreOffice 实例冲突）→ 用 PyMuPDF（pip 依赖，已在 requirements.txt 里，无需另装 poppler/pdftoppm）把 PDF 逐页渲成 PNG，抽验**封面＋最密一页＋本轮动过修复的页**，与 SVG 渲染对照；python-pptx 复开核对页数与备注页数（无 LibreOffice 时至少做页数/备注核对，并如实说明未回渲）。
+7. 回渲验收：把成品 PPTX 渲成图，抽验**封面＋最密一页＋本轮动过修复的页**，与 SVG 渲染对照，并用 python-pptx 复开核对页数与备注页数。渲染器按宿主选：**Windows 且装了桌面版 PowerPoint 时，优先用 PowerPoint 本身渲染**（COM 把幻灯片导出为图片即可）——它对 `wrap="none"` 等文本语义的处理与最终打开环境一致，是回渲的基准；**LibreOffice 不遵守 `wrap="none"`，会把单行文本渲成假折行，不能据此判定 PPTX 有问题**。其它宿主用 LibreOffice 转 PDF（**必须带独立 profile**：`soffice -env:UserInstallation=file:///<临时目录>/lo-profile --headless --convert-to pdf …`；用默认 profile 在部分 Windows 环境会崩（0xC0000409），也会与已打开的 LibreOffice 实例冲突）→ 再用 PyMuPDF（pip 依赖，已在 requirements.txt 里，无需另装 poppler/pdftoppm）逐页渲成 PNG。无任何可用渲染器时至少做页数/备注核对，并如实说明未回渲。
 8. 定稿落位：成品 PPTX 拷入 `<RUN_DIR>/output/`，中文交付名，作附件交付；工程目录保留供后续定点改稿。
 
 转制口径如实告知用户：几何 1:1 量测转原生形状、文字可编辑；字体按 SVG 字体栈写入（DM Sans/Inter＋PingFang/微软雅黑回退），无该字体的机器自动回退；卡片阴影等效果由编译器近似。
