@@ -17,14 +17,14 @@ description: 用户指定的 PPT 标准工作流（zengwenliang416/ppt-agent 的
 | `AskUserQuestion`（Hard Stop） | 在聊天里把问题/大纲摆出来并**停住等用户回复**，不回复不推进 |
 | 插件根 `skills/_shared/...` | 本技能 `shared/...` |
 | `RUN_DIR=openspec/changes/<change-id>` | `~/workspace/openspec/changes/<change-id>`，产物名与原文完全一致 |
-| Gemini 审查（gemini CLI） | **走 AI Studio API，不用 CLI**：review-core 把审查提示词＋该页 SVG 全文拼成一个文本文件，用 ppt-forge 自带的 `tools/gemini_api.py ask --prompt-file <文件>` 调用（API Key 走环境变量 `GEMINI_API_KEY`，在 https://aistudio.google.com/apikey 自行申请），模型默认 `gemini-3-flash-preview`。`review_engine: gemini-api`，正常打分（加权 ≥7.0、布局 ≥6、可读性 ≥6 质量门照旧）。API 调用失败（429/503/网络）时按 ppt-forge SKILL.md 的多模型确认制处理：停下问用户换哪个模型，不自作主张降级 |
+| Gemini 审查（gemini CLI） | **走 AI Studio API，不用 CLI**：review-core 把审查提示词＋该页 SVG 全文拼成一个文本文件，用 ppt-forge 自带的 `tools/gemini_api.py ask --prompt-file <文件>` 调用（API Key 走环境变量 `GEMINI_API_KEY`，在 https://aistudio.google.com/apikey 自行申请），模型默认 `gemini-3-flash-preview`。`review_engine: gemini-api`，正常打分（加权 ≥7.0、布局 ≥6、可读性 ≥6 质量门照旧）。审查引擎在 Phase 6 开工前先由用户确认（默认推荐 Gemini）；API 调用失败（429/503/网络）时再按 ppt-forge SKILL.md 的多模型确认制停下问用户换哪个模型，不自作主张降级 |
 | Phase 7 `open index.html` | 本机打不开用户浏览器：把 `output/` 整夹打包 zip 作为附件交付，并给出逐页 SVG 路径 |
 
 ## 用户已定的固定约定（覆盖原文的可选项）
 
 - **风格由用户确认，技能只推荐**（2026-11-04 用户改定，覆盖原文 Phase 1 的风格选择方式）：没有预设默认风格；Phase 2 需求确认时列出候选风格＋技能推荐与理由，用户确认哪套用哪套，未经确认不锁定风格。用户显式指定风格或 `--brand-colors` 时视为已确认，照其执行。细则以 ppt-forge SKILL.md「固定约定」为准。
 - **输出 HTML + SVG 可接受**（用户 2026-11-04 明确），不强求 PPTX；需要 PPTX 时再走 ppt-master 转制并向用户说明。
-- **人只把关两处**：Phase 2 需求确认、Phase 4 大纲审批。其余（排版、配色、布局、配图、字段、图标）全部由流程自动完成，不再逐项问用户。
+- **人只把关两处**：Phase 2 需求确认、Phase 4 大纲审批。其余（排版、配色、布局、配图、字段、图标）全部由流程自动完成，不再逐项问用户。（ppt-forge 层另有两处用户确认：Phase 6 开工前确认审查模型、Phase 8 生成 PPT 前的确认，以 ppt-forge SKILL.md 为准。）
 - 用户把材料和需求给全时，Phase 2 先把能从材料推导的答案填好、只问缺口，但**确认动作不能省**。
 - 大纲未经用户批准、`outline.json` 未写入 `"approved": true`，**禁止进入 Phase 5**。
 

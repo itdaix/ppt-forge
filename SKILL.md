@@ -1,6 +1,6 @@
 ---
 name: ppt-forge
-description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 × 多模型审核 × ppt-master 只取转制，全部组件随包 vendor 分发，装这一个包即可，不需要再装 ppt-agent / ppt-master）：材料/主题 → 需求确认（用户把关）→ 大纲规划（用户审批 Hard Stop）→ ppt-agent 逐页 SVG 生成 → 逐页审查修复＋整体审查（主审 Gemini；不通或额度耗尽时停下问用户，在 Grok / 豆包 / DeepSeek / 其它 Gemini 模型 / Muse 自审中由用户确认换哪个）→ Phase 7 组装并交付 SVG 包 → Phase 8 生成 PPT：转制原生可编辑 PPTX（包内 vendor 的 svg_to_pptx 转制链）前先请用户确认，不直接生成 → 双交付（SVG 包＋PPTX，含演讲备注）。用户要做 PPT、演示、汇报材料时默认且严格按此流程跑；风格不预设默认，在需求确认时由用户确认，技能只给推荐。团队安装与依赖见包内 README.md。
+description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 × 多模型审核 × ppt-master 只取转制，全部组件随包 vendor 分发，装这一个包即可，不需要再装 ppt-agent / ppt-master）：材料/主题 → 需求确认（用户把关）→ 大纲规划（用户审批 Hard Stop）→ ppt-agent 逐页 SVG 生成 → 逐页审查修复＋整体审查（审查引擎在 Phase 6 开工前先由用户确认：默认推荐 Gemini，备选 Grok / 豆包 / DeepSeek / 其它 Gemini 模型 / Muse 自审；选定引擎中途不通时再停下问用户换哪个）→ Phase 7 组装并交付 SVG 包 → Phase 8 生成 PPT：转制原生可编辑 PPTX（包内 vendor 的 svg_to_pptx 转制链）前先请用户确认，不直接生成 → 双交付（SVG 包＋PPTX，含演讲备注）。用户要做 PPT、演示、汇报材料时默认且严格按此流程跑；风格不预设默认，在需求确认时由用户确认，技能只给推荐。团队安装与依赖见包内 README.md。
 ---
 
 # PPT Forge（PPT 锻造坊 · 全融合自包含版）
@@ -24,7 +24,7 @@ description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 ×
 
 - **风格由用户确认，技能只推荐**（2026-11-04 用户改定）：没有预设默认风格，不许跳过风格确认。Phase 2 需求确认时，把风格作为确认项之一摆给用户：列出候选（business 通用商务、thinkway 九慧公司风，必要时加其余适用风格），并给出技能推荐＋一句理由（按材料性质判断，如公司材料／对外场合优先推荐 thinkway，一般商务汇报推荐 business）；**用户确认哪套就用哪套，未经确认不锁定风格、不开生成**。用户在委托时已点名风格的，视为已确认，照其点名执行。
 - 可选风格 `thinkway`（`--style=thinkway`，2026-11-04 用户拍板加入）：上海九慧（Thinkway）公司风，参数实测自公司介绍 PPT（青蓝 #117598＋金黄 #FFC000、微软雅黑、直角扁平卡片）。风格文件 `vendor/ppt-agent/shared/references/styles/thinkway.yaml` 已注册进包内 index.json；其 `brand_furniture` 段是 YAML 代币之外的家具规范——**用 thinkway 时必须照它逐页绘制**：内容/目录/数据页的顶部双色条（蓝长段＋金短段）、标题下细线、页脚细线＋左下 Thinkway 字标（资产在 `vendor/ppt-agent/shared/assets/thinkway/`）＋页码＋右下公司名；封面/尾页用组合标＋金色标语，不套条脚。在 Phase 2 作为候选向用户推荐（公司材料／对外场合优先推荐），由用户确认后才用。
-- **人只把关三步**：Phase 2 需求确认、Phase 4 大纲审批、Phase 8 生成 PPT 前的确认。其余阶段自动推进，不逐步请示。
+- **人把关四步**：Phase 2 需求确认、Phase 4 大纲审批、Phase 6 开工前确认审查模型、Phase 8 生成 PPT 前的确认。其余阶段自动推进，不逐步请示。
 - 用户给全材料时 Phase 2 先按材料推导填好、只问缺口，确认动作不能省。
 - 材料没有的数据一律不编（钟点、量化指标、角色标签同理）。
 - 交付＝**双份**：output/ 的 SVG 包（zip）＋转制后的原生 PPTX，两者都作附件交付。
@@ -36,9 +36,9 @@ description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 ×
 
 质量门（与审查量规一致）：加权 ≥7.0、布局 ≥6、可读性 ≥6、无 Critical；修复路由 full_rethink ≤1 轮、layout_restructure/content_reduction ≤2 轮、attribute_change ≤1 轮；全页审完才许整体审查，整体只自动修 priority-1、最多重跑 1 次。
 
-审查：多模型制，用户确认（2026-11-04 用户定版）：
-- **主审＝Gemini**：`tools/gemini_api.py ask --prompt-file <审查提示词+SVG全文>`，默认模型 `gemini-3-flash-preview`，**免费层约 20 次/天**。逐页「审查＋修复＋复审」约 3 次/页——**开工前先按页数算审查预算**，页数多的 PPT 先向用户说明额度安排。
-- **Gemini 不通或额度耗尽 → 停下来问用户，不许自作主张换、也不许直接跳 Muse 自审**：把备选摆出来由用户点名确认后才换，量规不变，分数标注实际引擎。备选池与接通状态（2026-11-04 在发起人环境验明；换机器/换时间须复验）：
+审查：多模型制，用户确认（2026-11-04 用户定版；同日晚间改定为每趟开工前确认）：
+- **Phase 6 开工前先确认审查模型（每趟必走，不确认不开审）**：把可选引擎摆给用户——默认推荐 **Gemini**（`tools/gemini_api.py ask --prompt-file <审查提示词+SVG全文>`，模型 `gemini-3-flash-preview`，**免费层约 20 次/天**；逐页「审查＋修复＋复审」约 3 次/页，先按页数算审查预算、页数多的先向用户说明额度安排）；备选见下池。用户点名哪个就用哪个审全程。
+- **选定引擎中途不通或额度耗尽 → 停下来再问用户，不许自作主张换、也不许直接跳 Muse 自审**：由用户点名确认后才换，量规不变，分数标注实际引擎。备选池与接通状态（2026-11-04 在发起人环境验明；换机器/换时间须复验）：
   - 其它 Gemini 模型 — 同一 helper 换 `--model`，先 `models` 探活（2.5 代对新用户关闭、Pro 免费额度为 0，以实测为准）
   - Muse 自审 — 随时可用（渲染逐页目检＋源码量测，review_mode 记 `claude_full`、manifest 注明 supplementary_review）
   - Grok — 未接通（无 xAI 连接器；点名时先走 API 接入再审）
