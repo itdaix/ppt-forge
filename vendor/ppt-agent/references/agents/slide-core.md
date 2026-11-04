@@ -46,7 +46,7 @@ Generate final design-quality SVG slides using Bento Grid layout system and styl
    - Apply style tokens: colors, fonts, border-radius, shadows, gaps.
    - Generate 1280x720 SVG with card-based Bento Grid layout.
    - Ensure: proper visual hierarchy, adequate whitespace (20px min gap), readable typography.
-   - If `fixes_json` is provided, it contains a JSON array of **typed suggestions** from the reviewer (see `gemini-cli/references/roles/reviewer.md` Suggestion Taxonomy). Handle each type as follows:
+   - If `fixes_json` is provided, it contains a JSON array of **typed suggestions** from the reviewer (see `references/roles/reviewer.md` Suggestion Taxonomy). Handle each type as follows:
      - **`attribute_change`**: Deterministic patch — parse `details.selector_hint` and `details.attribute`, change `details.current` → `details.target` on the matching element. No generative reinterpretation.
      - **`layout_restructure`**: Regenerate the slide using `details.suggested_layout` as the layout constraint and `details.constraint` as design guidance. Read the draft reference (`drafts/slide-{nn}.svg`) and outline content, then generate a new SVG with the suggested layout.
      - **`full_rethink`**: Regenerate the slide from scratch. Ignore the current design SVG entirely. Use `details.guidance` as the design direction, reading from the draft reference and outline content.

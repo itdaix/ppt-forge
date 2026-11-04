@@ -48,25 +48,25 @@ Only proceed to LLM review if no Critical automated checks fail.
 3. Read `${run_dir}/outline.json` to get the slide's title and context.
 4. Send `heartbeat` when starting.
 5. Build a review prompt that includes:
-   - The **full SVG source code** (MUST be included — reviewing by filename alone is forbidden per `gemini-cli/SKILL.md` constraints)
+   - The **full SVG source code** (MUST be included — reviewing by filename alone is forbidden per the reviewer role contract (`references/roles/reviewer.md`))
    - The **style token values** (color scheme, typography, card style)
    - The **slide context** (index, title, presentation style name)
-6. Call Gemini for layout & aesthetic optimization via the `gemini-cli` skill （本机改造版，见其 SKILL.md 的 Call Entry）。宿主映射：先读 `~/workspace/custom-skills/gemini-cli/SKILL.md` 与其中的 `references/roles/reviewer.md`，把审查提示词（任务＋SVG 全文＋风格 token＋输出格式要求，模板见该 SKILL.md）拼成文本文件，再用 Bash 调 AI Studio API helper，结果存为 raw 产物：
+6. Call the review engine for layout & aesthetic optimization via the package route. 把审查提示词（任务＋SVG 全文＋风格 token＋输出格式要求，输出格式与量规见 `references/roles/reviewer.md`）拼成一个文本文件，用 ppt-forge 包内的 `tools/gemini_api.py` 调用（API Key 走环境变量 `GEMINI_API_KEY`；审查引擎以 Phase 6 开工前用户确认的为准，见 ppt-forge SKILL.md 审查节），结果存为 raw 产物：
    ```bash
-   python3 ~/workspace/custom-connectors/custom.google-ai-studio/bin/gemini_api.py ask \
+   python3 ${FORGE}/tools/gemini_api.py ask \
      --model gemini-3-flash-preview \
      --prompt-file "${run_dir}/reviews/.prompt-${slide_index}.txt" \
      > "${run_dir}/reviews/gemini-raw-${slide_index}.md"
    ```
-   Gemini's raw output is written to `gemini-raw-{slide_index}.md` — **this file MUST be preserved** as an intermediate artifact. **不要调用上游的 invoke-gemini-ppt.ts / gemini CLI**（本机 OAuth 路线已死，见 gemini-cli SKILL.md 顶部说明）。
-7. Handle the result per `gemini-cli/SKILL.md` Fallback Strategy:
+   Gemini's raw output is written to `gemini-raw-{slide_index}.md` — **this file MUST be preserved** as an intermediate artifact. **不要调用 gemini CLI 或任何包外审查通道**，统一走包内 `tools/gemini_api.py`。
+7. Handle the result per ppt-forge SKILL.md（审查：多模型用户确认制）:
    - **Gemini available (helper exit 0, output non-empty)**: Extract typed optimization suggestions from Gemini's output. Proceed to step 8.
-   - **Gemini unavailable (helper failed; 429/503 先重试一次)**: Perform **technical validation only** — run hard-rule checks (XML validity, viewBox, font-size floor, safe area, WCAG contrast, style token compliance). **No aesthetic scores, no optimization suggestions.** Mark as "Claude technical validation (Gemini unavailable) — aesthetic optimization not performed". Skip to step 9-technical.
-8. Write `reviews/review-{slide_index}.md` using the output format from `reviewer.md`:
+   - **Review engine unavailable (call failed / 429 / 503)**: STOP and report to the user — the user picks the next engine (do not switch on your own). Only if the user directs technical-only continuation, perform **technical validation only** — run hard-rule checks (XML validity, viewBox, font-size floor, safe area, WCAG contrast, style token compliance). **No aesthetic scores, no optimization suggestions.** Mark as "Claude technical validation (Gemini unavailable) — aesthetic optimization not performed". Skip to step 9-technical.
+8. Write `reviews/review-{slide_index}.md` using the output format from `references/roles/reviewer.md`:
    - **Optimization Suggestions** (primary): typed suggestions using the 5-type taxonomy (`attribute_change`, `layout_restructure`, `full_rethink`, `content_reduction`, `deck_coordination`). Each with type, priority (1-3), description, and type-specific details.
    - **Suggestions JSON**: parseable JSON array for downstream automation.
    - **Quality Gate** (secondary): weighted overall score, pass/fail, per-criterion scores, hard rule violations.
-9. **If Gemini was available**: Calculate weighted overall score per the Weighted Scoring Model in `reviewer.md`. Apply hard gates on Layout (>=6) and Readability (>=6). Determine fix action based on Adaptive Fix Budget table.
+9. **If Gemini was available**: Calculate weighted overall score per the Weighted Scoring Model in `references/roles/reviewer.md`. Apply hard gates on Layout (>=6) and Readability (>=6). Determine fix action based on Adaptive Fix Budget table.
 9-technical. **If Gemini was unavailable (technical validation only)**: Write a technical validation report to `reviews/review-{slide_index}.md` with:
    - Header: `**Reviewer**: Claude technical validation (Gemini unavailable) — aesthetic optimization not performed`
    - **Hard Rule Results**: table with each rule from Quality Standards, pass/fail status, and violation details if any.
@@ -114,7 +114,7 @@ For `mode=holistic`:
 - Fix loop does not trigger — only hard-rule violations are blocking
 
 ## Gemini Invocation Policy
-- Use the `gemini-cli` skill (本机改造版) with `role=reviewer` for all optimization tasks: read its SKILL.md for the contract, then execute the AI Studio API helper via Bash per its Call Entry. **Never** call `invoke-gemini-ppt.ts` or the gemini CLI on this host.
+- Use the package review route for all optimization tasks: the contract is `references/roles/reviewer.md`; execute via `tools/gemini_api.py` (prompt-file with the full SVG embedded). **Never** call the gemini CLI or any review channel outside this package.
 - **Both reading the skill and Bash are required** — the skill carries the instructions, Bash executes the helper.
 - Do not generate SVG or modify slides directly — only assess, optimize, and suggest.
 - Preserve Gemini raw outputs (`gemini-raw-*.md`) as intermediate artifacts — never delete them.

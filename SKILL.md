@@ -10,12 +10,12 @@ description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 ×
 ## 路径与本地映射（开工先定这四个变量）
 
 - `FORGE`＝本技能目录（本文件所在目录）。下文所有包内路径都相对它，**不要再去引用包外的 ppt-agent / ppt-master 安装**。
-- `PY_PPTX`＝装了 python-pptx 的 python。团队机：`pip install -r <FORGE>/requirements.txt` 后的 `python3`；发起人本机：`~/workspace/tools/pptx-venv/bin/python`。
-- `RUN_DIR`＝`~/workspace/openspec/changes/<change-id>`（工作区产物目录约定）。
-- Gemini 审查调用＝`python3 <FORGE>/tools/gemini_api.py`，API Key 走环境变量 `GEMINI_API_KEY`（各自在 https://aistudio.google.com/apikey 申请；发起人本机亦可用其连接器 helper，等价替换）。
+- `PY_PPTX`＝装了 python-pptx 的 python：`pip install -r <FORGE>/requirements.txt` 后的 `python3`，或任何装了该依赖的 venv 中的 python。
+- `RUN_DIR`＝`<工作区>/openspec/changes/<change-id>`（工作区产物目录约定）。
+- Gemini 审查调用＝`python3 <FORGE>/tools/gemini_api.py`，API Key 走环境变量 `GEMINI_API_KEY`（各自在 https://aistudio.google.com/apikey 申请）。
 
 包内结构：
-- `vendor/ppt-agent/`：干活主体的工作流原件——`AGENT_WORKFLOW.md`（宿主映射与阶段总纲）、`references/workflow.md`（阶段细节权威）、`references/agents/`（四角色）、`shared/`（18 种风格 YAML、提示词注册表、预览模板）
+- `vendor/ppt-agent/`：干活主体的工作流原件——`AGENT_WORKFLOW.md`（宿主映射与阶段总纲）、`references/workflow.md`（阶段细节权威）、`references/agents/`（四角色）、`references/roles/reviewer.md`（审查角色契约：量规／建议分类／输出格式）、`shared/`（18 种风格 YAML、提示词注册表、预览模板）
 - `vendor/ppt-master/scripts/`：仅转制链脚本闭包（project_manager / svg_quality_checker / svg_to_pptx 及依赖）
 - `vendor/ppt-master/LICENSE`、`vendor/NOTICE.md`：许可证与归属
 - `tools/gemini_api.py`（审查传输）、`tools/inject_notes.py`（备注注入）、`references/spec-lock-flat-template.md`（转制锁模板）
@@ -38,7 +38,7 @@ description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 ×
 
 审查：多模型制，用户确认（2026-11-04 用户定版；同日晚间改定为每趟开工前确认）：
 - **Phase 6 开工前先确认审查模型（每趟必走，不确认不开审）**：把可选引擎摆给用户——默认推荐 **Gemini**（`tools/gemini_api.py ask --prompt-file <审查提示词+SVG全文>`，模型 `gemini-3-flash-preview`，**免费层约 20 次/天**；逐页「审查＋修复＋复审」约 3 次/页，先按页数算审查预算、页数多的先向用户说明额度安排）；备选见下池。用户点名哪个就用哪个审全程。
-- **选定引擎中途不通或额度耗尽 → 停下来再问用户，不许自作主张换、也不许直接跳 Muse 自审**：由用户点名确认后才换，量规不变，分数标注实际引擎。备选池与接通状态（2026-11-04 在发起人环境验明；换机器/换时间须复验）：
+- **选定引擎中途不通或额度耗尽 → 停下来再问用户，不许自作主张换、也不许直接跳 Muse 自审**：由用户点名确认后才换，量规不变，分数标注实际引擎。备选池与接通状态（接通状态因环境与时间而异，下为已知情形，实际使用前须复验）：
   - 其它 Gemini 模型 — 同一 helper 换 `--model`，先 `models` 探活（2.5 代对新用户关闭、Pro 免费额度为 0，以实测为准）
   - Muse 自审 — 随时可用（渲染逐页目检＋源码量测，review_mode 记 `claude_full`、manifest 注明 supplementary_review）
   - Grok — 未接通（无 xAI 连接器；点名时先走 API 接入再审）

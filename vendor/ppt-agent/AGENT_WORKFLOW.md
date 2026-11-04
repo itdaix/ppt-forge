@@ -7,7 +7,7 @@ description: 用户指定的 PPT 标准工作流（zengwenliang416/ppt-agent 的
 
 上游：https://github.com/zengwenliang416/ppt-agent （MIT，v1.0.0）。本文件是 ppt-forge 自包含版随包分发的适配副本，插件根＝ppt-forge 包内的 `vendor/ppt-agent/`（上游仓库原件不随包分发，要对照原文去 GitHub）。
 
-完整原文工作流在 `references/workflow.md`（开工前必读，它是阶段细节的权威）；四个阶段智能体的角色定义在 `references/agents/`（research-core / content-core / slide-core / review-core）；共享注册表与参考在 `shared/`（`shared/index.json` 风格与提示词注册表、`shared/references/styles/*.yaml` 17 种风格、`shared/references/prompts/*.md`、`shared/assets/preview-template.html`）。
+完整原文工作流在 `references/workflow.md`（开工前必读，它是阶段细节的权威）；四个阶段智能体的角色定义在 `references/agents/`（research-core / content-core / slide-core / review-core），审查角色契约（量规、建议分类、输出格式）在 `references/roles/reviewer.md`；共享注册表与参考在 `shared/`（`shared/index.json` 风格与提示词注册表、`shared/references/styles/*.yaml` 17 种风格、`shared/references/prompts/*.md`、`shared/assets/preview-template.html`）。
 
 ## 宿主映射（Claude 插件语义 → 本机）
 
@@ -16,7 +16,7 @@ description: 用户指定的 PPT 标准工作流（zengwenliang416/ppt-agent 的
 | `Task(subagent_type="ppt-agent:X-core", prompt=...)` | `subagent.spawn`：把 `references/agents/X-core.md` 全文＋本次参数（run_dir、mode、slide_index 等）写进子代理任务说明 |
 | `AskUserQuestion`（Hard Stop） | 在聊天里把问题/大纲摆出来并**停住等用户回复**，不回复不推进 |
 | 插件根 `skills/_shared/...` | 本技能 `shared/...` |
-| `RUN_DIR=openspec/changes/<change-id>` | `~/workspace/openspec/changes/<change-id>`，产物名与原文完全一致 |
+| `RUN_DIR=openspec/changes/<change-id>` | `<工作区>/openspec/changes/<change-id>`，产物名与原文完全一致 |
 | Gemini 审查（gemini CLI） | **走 AI Studio API，不用 CLI**：review-core 把审查提示词＋该页 SVG 全文拼成一个文本文件，用 ppt-forge 自带的 `tools/gemini_api.py ask --prompt-file <文件>` 调用（API Key 走环境变量 `GEMINI_API_KEY`，在 https://aistudio.google.com/apikey 自行申请），模型默认 `gemini-3-flash-preview`。`review_engine: gemini-api`，正常打分（加权 ≥7.0、布局 ≥6、可读性 ≥6 质量门照旧）。审查引擎在 Phase 6 开工前先由用户确认（默认推荐 Gemini）；API 调用失败（429/503/网络）时再按 ppt-forge SKILL.md 的多模型确认制停下问用户换哪个模型，不自作主张降级 |
 | Phase 7 `open index.html` | 本机打不开用户浏览器：把 `output/` 整夹打包 zip 作为附件交付，并给出逐页 SVG 路径 |
 

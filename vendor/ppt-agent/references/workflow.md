@@ -253,7 +253,7 @@ For each slide (or in batches):
    ```text
    Task(subagent_type="ppt-agent:review-core", prompt="run_dir=${RUN_DIR} mode=holistic")
    ```
-   Evaluates cross-slide consistency using the 5-Dimension Evaluation Framework (Visual Rhythm, Color Story, Narrative Arc, Style Consistency, Pacing) from `reviewer.md`.
+   Evaluates cross-slide consistency using the 5-Dimension Evaluation Framework (Visual Rhythm, Color Story, Narrative Arc, Style Consistency, Pacing) from `references/roles/reviewer.md`.
    Outputs `${RUN_DIR}/reviews/review-holistic.md` with `deck_coordination` type suggestions only.
 
    **Holistic fix flow** (advisory — does not block delivery):
@@ -401,4 +401,4 @@ For each slide (or in batches):
 - If research fails, continue with user-provided requirements only and mark confidence downgrade.
 - If material collection partially fails, continue with available materials.
 - If a slide review fails after 2 fix rounds, accept with quality warning in delivery summary.
-- If Gemini is unavailable, review-core performs **technical validation only** — hard-rule checks (XML validity, viewBox, font-size, safe area, WCAG contrast, style tokens) with pass/fail. **No aesthetic scores and no optimization suggestions are produced.** The fix loop does not trigger for technical-only reviews. Slides pass if all Critical/Major hard rules pass. This is an honest degradation — aesthetic optimization requires cross-model review. See `skills/gemini-cli/SKILL.md` Fallback Strategy for the canonical policy.
+- If Gemini is unavailable, review-core performs **technical validation only** — hard-rule checks (XML validity, viewBox, font-size, safe area, WCAG contrast, style tokens) with pass/fail. **No aesthetic scores and no optimization suggestions are produced.** The fix loop does not trigger for technical-only reviews. Slides pass if all Critical/Major hard rules pass. This is an honest degradation — aesthetic optimization requires cross-model review. See ppt-forge SKILL.md（审查：多模型用户确认制）for the canonical policy on engine failure and switching.
