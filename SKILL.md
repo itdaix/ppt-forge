@@ -54,9 +54,9 @@ Phase 7 完成、SVG 包交付后，进入 Phase 8。
 
 （转制链：包内 ppt-master 转制链，2026-11-04 实测打通）
 
-工程目录：`~/workspace/projects/<name>_<YYYYMMDD>`。全程只动工程副本——**用户已验收的 RUN_DIR/output SVG 原稿一个字不改**，质量门要求的规范化只落在工程副本上。命令里的脚本全部来自 `vendor/ppt-master/scripts/`（记作 `MS`）：
+工程目录：`<工作区>/projects/<name>_<YYYYMMDD>`。全程只动工程副本——**用户已验收的 RUN_DIR/output SVG 原稿一个字不改**，质量门要求的规范化只落在工程副本上。命令里的脚本全部来自 `vendor/ppt-master/scripts/`（记作 `MS`）：
 
-1. 建工程：`python3 $MS/project_manager.py init <name> --dir ~/workspace/projects --quick-generate`
+1. 建工程：`python3 $MS/project_manager.py init <name> --dir <工作区>/projects --quick-generate`
 2. 拷入终稿 SVG：`cp <RUN_DIR>/output/slide-*.svg <proj>/svg_output/`（命名须 slide-NN.svg）。
 3. 写 spec_lock.md：flat 模板见 `references/spec-lock-flat-template.md`（scaffold-lock 在目录名无 format 时会失败，手写即可）。色板/字体按本份 PPT 的 SVG 实测值填。
 4. 质量门：`$PY_PPTX $MS/svg_quality_checker.py <proj> --canonical-authoring --stage final --json`，要求 blocking errors＝0（warnings 可放行）。已验两类门禁修复（仅工程副本）：
