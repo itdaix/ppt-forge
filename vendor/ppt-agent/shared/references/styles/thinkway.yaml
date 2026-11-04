@@ -1,0 +1,128 @@
+name: Thinkway Corporate
+mood: Precise, industrial, trustworthy. Shanghai Jiuhui (Thinkway) house style — teal-blue and gold, flat and dense, consultant-grade.
+
+# Measured 2026-11-04 from the company deck 《上海九慧信息科技有限公司介绍-16:9.pptx》
+# (theme XML + full-deck run statistics + slide master XML). Values are the deck's own, not approximations.
+# Revised 2026-11-04 (evening, user-directed): palette re-based on the "九慧" theme (theme1.xml)
+# of the user-supplied YX MES deck + the theme-variant palette screenshot the user provided —
+# the two agree exactly. Earlier ad-hoc run colors (#336699 / #4bacc6 / #f79646, hand-applied in
+# the intro deck, NOT theme colors) are removed. TOC/agenda pattern measured from that deck's
+# slide2 （目录） per the user's reference screenshot.
+
+color_scheme:
+  primary: "#117598"      # Deep teal-blue (theme accent1; master top strip + titles)
+  secondary: "#19a3d7"    # Bright sky blue (theme accent2)
+  tertiary: "#84d5f1"     # Pale sky blue (theme accent3 — tint fills, light chart series)
+  green: "#92d050"        # Theme accent4 (status / positive series)
+  accent: "#ffc000"       # Gold (theme accent6; most frequent run color in the deck — section chips/blocks)
+  # Theme accent5 is also #117598 (same as accent1) — the palette has 5 distinct accents, not 6.
+  agenda_bar: "#2c8abb"   # Mid blue of the TOC section bar （会议议程） — measured in use, not a theme slot
+  background: "#ffffff"   # Clean white (theme lt1)
+  text: "#262626"         # Near-black body text (deck practice; theme dk1 itself is #000000)
+  muted: "#7f7f7f"        # Footer gray (page number / company name)
+  line: "#bfbfbf"         # Theme dk2 — hairlines, footer rule, card borders
+  card_bg: "#e6f6fc"      # Pale blue tint (theme lt2)
+  hyperlink: "#4747ff"    # Theme hlink
+  hyperlink_followed: "#7030a0"  # Theme folHlink
+  chart_colors:            # Theme order; [0]=primary
+    - "#117598"            # Teal-blue (accent1)
+    - "#ffc000"            # Gold (accent6)
+    - "#19a3d7"            # Sky blue (accent2)
+    - "#84d5f1"            # Pale sky (accent3)
+    - "#92d050"            # Green (accent4)
+    - "#bfbfbf"            # Light gray (dk2)
+    - "#7e7e7e"            # Neutral gray
+
+typography:
+  heading_font: "'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif"
+  body_font: "'Microsoft YaHei', Arial, 'PingFang SC', 'Noto Sans SC', sans-serif"
+  cjk_font: "'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif"
+  scale: 1.0
+  # Deck practice: 微软雅黑 everywhere (1085 runs); Arial for latin; Arial Black reserved for hero numerals.
+
+card_style:
+  border_radius: 2         # Deck cards are flat rectangles — near-square corners, unlike business (12)
+  shadow: "none"           # Flat corporate look; elevation comes from color blocks, not shadows
+  border: "1px solid #bfbfbf"
+  gap: 20
+
+gradients:
+  hero_bg: "linear-gradient(135deg, #117598 0%, #0b4f66 100%)"   # Deepened primary (derived; deck covers are photo-based)
+  card_highlight: "linear-gradient(180deg, #e6f6fc 0%, #ffffff 100%)"
+
+elevation:
+  shadow_sm: "0 1px 2px rgba(0,0,0,0.05)"
+  shadow_md: "0 2px 6px rgba(0,0,0,0.08)"
+  shadow_lg: "0 8px 24px rgba(0,0,0,0.12)"
+
+decoration:
+  pattern: "top-strip"     # Signature two-tone strip — geometry in brand_furniture below
+  pattern_opacity: 1
+  icon_style: "filled"
+  icon_weight: 2
+
+slide_type_overrides:
+  cover:
+    card_bg: "#ffffff"
+    text: "#117598"
+    heading_scale: 1.2
+  quote:
+    card_bg: "#117598"
+    text: "#ffffff"
+    body_font_style: "italic"
+  data:
+    heading_scale: 0.95    # Deck data pages run dense; titles stay compact
+  section_divider:
+    background: "#117598"
+    text: "#ffffff"
+  toc:
+    # Agenda pattern measured 2026-11-04 from YX MES deck slide2 （目录）, per user's reference
+    # screenshot: photo panel left, section bar + item list right; the CURRENT section gets a
+    # gold bar, all other items sit grayed-out. Furniture (strip/footer) applies as usual.
+    title: { color: "#404040", weight: bold }   # Shaded tx1 (lumMod 75% + lumOff 25%) — TOC titles are dark, not teal
+    photo_panel: { x: 59, y: 108, width: 341, height: 542 }   # Tall stock-photo panel, left
+    section_bar: { x: 445, y: 108, width: 734, height: 52, fill: "#2c8abb", text_color: "#ffffff", weight: bold, label_example: "会议议程" }
+    items:
+      box: { x: 460, y: 177, width: 642 }
+      font_size_pt: 20          # ≈27px on the 1280x720 canvas
+      weight: bold
+      line_spacing: 2.0         # Line pitch ≈ 53px — matches the 52px bars
+      active: { bar: { x: 460, width: 673, height: 52, fill: "#ffc000" }, text_color: "#262626" }   # Gold bar behind the current item's line
+      inactive_text_color: "#bfbfbf"   # bg1 shaded to 75% luminance — items not yet reached read as grayed out
+
+# Brand furniture — NOT expressible by the token sections above; measured from the slide master
+# (master is 13.333in x 7.5in; coordinates below converted at 96dpi to the 1280x720 canvas).
+# Apply to content / toc / data pages. Cover and closing pages are full-bleed photo pages and
+# use the lockup asset + slogan instead of the strip/footer set.
+brand_furniture:
+  assets_dir: "assets/thinkway"
+  wordmark: "assets/thinkway/thinkway-wordmark.jpg"   # Footer logo (from master, 300x69, white bg)
+  lockup: "assets/thinkway/thinkway-lockup.png"       # 九慧 Thinkway stacked lockup, transparent (cover/closing)
+  lockup_white: "assets/thinkway/thinkway-lockup-white.png"   # Reversed version for dark backgrounds: all non-gold pixels turned white, gold accent kept — use this on hero/closing dark fields, NEVER put the color lockup on a white plate
+  top_strip:
+    y: 0
+    height: 10
+    segments:
+      - { x: 36, width: 927, fill: "#117598" }        # Long blue segment
+      - { x: 975, width: 261, fill: "#ffc000" }       # Short gold segment
+  title:
+    x: 38
+    baseline: 76
+    size: 30
+    weight: bold
+    color: "#117598"
+    divider_line: { x1: 38, x2: 1236, y: 88, color: "#bfbfbf" }
+  section_chip: "Gold block (#ffc000) with dark text for section labels — the deck's signature module marker"
+  footer:
+    rule: { x: 37, width: 1198, y: 663, height: 2, fill: "#bfbfbf" }
+    logo: { asset: "wordmark", x: 38, y: 677, width: 143, height: 33 }
+    # Implementation note (verified 2026-11-04): embed the wordmark as a base64 data URI in each
+    # SVG — external file references (href / xlink:href) are dropped by LibreOffice rendering.
+    logo_embed: "data URI (base64) — do not use external file references"
+    page_number: { x: 640, y: 692, size: 12, color: "#7f7f7f", anchor: middle }
+    company_name: { text: "上海九慧信息科技有限公司", x: 1242, y: 690, size: 12, color: "#7f7f7f", anchor: end }
+  closing:
+    slogan_cn: "价值交付，致臻卓越"
+    slogan_en: "More Value, Run Better"
+    slogan_color: "#ffc000"
+    note: "Full-bleed photo + dark bottom band carrying the lockup and gold slogan, per deck pp.43-44. On generated dark hero closings, place lockup_white directly on the dark field (no white plate) — user rejected the plate look 2026-11-04."
