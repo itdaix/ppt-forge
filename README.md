@@ -21,7 +21,7 @@ ppt-agent 工作流与 ppt-master 转制链都已 vendor 在包内，**不需要
 
 ## 风格（需求确认时定，没有默认）
 
-包内有 18 种风格（`vendor/ppt-agent/shared/references/styles/*.yaml`），每次做 deck 时在需求确认那一步选定：
+包内有 18 种风格（`vendor/ppt-agent/shared/references/styles/*.yaml`），每次做 PPT 时在需求确认那一步选定：
 技能会按材料性质给出推荐和理由，**由你确认选哪套**，技能不能替你定。常用两套：
 
 - `business` — 通用商务风（藏蓝＋橙，圆角卡片），适合一般汇报。

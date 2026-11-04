@@ -1,6 +1,6 @@
 <!-- spec-lock flat 模板：手写到 ppt-master 工程根目录 spec_lock.md。
      scaffold-lock 在工程目录名不含 format 时会失败，直接用本模板改值即可。
-     色板/字体按本 deck SVG 的实测值填；typography 须覆盖 SVG 中反复出现（≥3 次）的字号，
+     色板/字体按本份 PPT 的 SVG 实测值填；typography 须覆盖 SVG 中反复出现（≥3 次）的字号，
      否则质量门会以 undeclared font-size recurrence 拦截——补声明角色即可，不要改 SVG。 -->
 <!-- ppt-master-schema: spec-lock/v1 -->
 # Execution Lock
@@ -21,7 +21,7 @@
 
 ## visual_style
 - visual_style: custom
-- visual_style_behavior: <本 deck 的视觉口径一句话>
+- visual_style_behavior: <本份 PPT 的视觉口径一句话>
 
 ## colors
 - background: #FFFFFF
