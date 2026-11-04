@@ -1,7 +1,10 @@
 # ppt-forge 安装说明（团队版）
 
-ppt-forge 是自包含技能包：PPT 全流程（需求确认 → 大纲审批 → 逐页 SVG 生成 → 多模型审查 → 转原生可编辑 PPTX）所需的
-ppt-agent 工作流与 ppt-master 转制链都已 vendor 在包内，**不需要再单独安装 ppt-agent 或 ppt-master**。
+ppt-forge 是自包含技能包：一份 PPT 的全流程共 **8 个阶段**——
+① 初始化 → ② 需求确认 **【需你确认】** → ③ 素材收集 → ④ 大纲审批 **【需你确认】** → ⑤ 策划稿 →
+⑥ 逐页生成 SVG ＋多模型审查 → ⑦ 组装并交付 SVG 包 → ⑧ 生成 PPT **【需你确认】**（转制成原生可编辑 PPTX）。
+8 步里只有 ②④⑧ 三步需要你点头，其余自动推进。所需的 ppt-agent 工作流与 ppt-master 转制链都已
+vendor 在包内，**不需要再单独安装 ppt-agent 或 ppt-master**。
 
 ## 安装
 
