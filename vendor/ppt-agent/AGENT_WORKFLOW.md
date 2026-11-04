@@ -7,7 +7,7 @@ description: 用户指定的 PPT 标准工作流（zengwenliang416/ppt-agent 的
 
 上游：https://github.com/zengwenliang416/ppt-agent （MIT，v1.0.0）。本文件是 ppt-forge 自包含版随包分发的适配副本，插件根＝ppt-forge 包内的 `vendor/ppt-agent/`（上游仓库原件不随包分发，要对照原文去 GitHub）。
 
-完整原文工作流在 `references/workflow.md`（开工前必读，它是阶段细节的权威）；四个阶段智能体的角色定义在 `references/agents/`（research-core / content-core / slide-core / review-core），审查角色契约（量规、建议分类、输出格式）在 `references/roles/reviewer.md`；共享注册表与参考在 `shared/`（`shared/index.json` 风格与提示词注册表、`shared/references/styles/*.yaml` 17 种风格、`shared/references/prompts/*.md`、`shared/assets/preview-template.html`）。
+完整原文工作流在 `references/workflow.md`（开工前必读，它是阶段细节的权威）；四个阶段智能体的角色定义在 `references/agents/`（research-core / content-core / slide-core / review-core），审查角色契约（量规、建议分类、输出格式）在 `references/roles/reviewer.md`；共享注册表与参考在 `shared/`（`shared/index.json` 风格与提示词注册表、`shared/references/styles/*.yaml` 18 种风格、`shared/references/prompts/*.md`、`shared/assets/preview-template.html`）。
 
 ## 宿主映射（Claude 插件语义 → 本机）
 
