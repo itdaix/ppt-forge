@@ -20,7 +20,7 @@ description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 ×
 - `vendor/ppt-agent/`：干活主体的工作流原件——`AGENT_WORKFLOW.md`（宿主映射与阶段总纲）、`references/workflow.md`（阶段细节权威）、`references/agents/`（四角色）、`references/roles/reviewer.md`（审查角色契约：量规／建议分类／输出格式）、`shared/`（18 种风格 YAML、提示词注册表、预览模板）
 - `vendor/ppt-master/scripts/`：仅转制链脚本闭包（project_manager / svg_quality_checker / svg_to_pptx 及依赖）
 - `vendor/ppt-master/LICENSE`、`vendor/NOTICE.md`：许可证与归属
-- `tools/gemini_api.py`（审查传输）、`tools/inject_notes.py`（备注注入）、`references/spec-lock-flat-template.md`（转制锁模板）
+- `tools/gemini_api.py`（审查传输）、`tools/inject_notes.py`（备注注入）、`references/spec-lock-flat-template.md`（转制锁模板）、`LICENSE`（MIT，上游归属见 `vendor/NOTICE.md`）
 
 ## 固定约定（用户口径，不可漂移）
 
@@ -40,7 +40,7 @@ description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 ×
 
 审查：多模型制，用户确认（2026-11-04 用户定版；同日晚间改定为每趟开工前确认）：
 - **Phase 6 开工前先确认审查模型（每趟必走，不确认不开审）**：把可选引擎摆给用户——默认推荐 **Gemini**（`tools/gemini_api.py ask --prompt-file <审查提示词+SVG全文>`，模型 `gemini-3-flash-preview`，**免费层约 20 次/天**；逐页「审查＋修复＋复审」约 3 次/页，先按页数算审查预算、页数多的先向用户说明额度安排；免费层一天大约够审 6 页，超了要提前商量分两天审或开付费，别审到一半断档）；备选见下池。用户点名哪个就用哪个审全程。
-- **选定引擎中途不通或额度耗尽 → 停下来再问用户，不许自作主张换、也不许直接跳 Muse 自审**：由用户点名确认后才换，量规不变，分数标注实际引擎。备选池（**接通状态取决于宿主环境与已配置的连接器／API，不预设**；开工确认时现场探活，调得通的才列给用户选）：
+- **选定引擎中途不通或额度耗尽 → 停下来再问用户，不许自作主张换、也不许直接跳宿主模型自审**：由用户点名确认后才换，量规不变，分数标注实际引擎。备选池（**接通状态取决于宿主环境与已配置的连接器／API，不预设**；开工确认时现场探活，调得通的才列给用户选）：
   - 其它 Gemini 模型 — 同一 helper 换 `--model`，先 `models` 探活，以实测为准（某些模型对新账号关闭或免费额度为 0）
   - 宿主模型自审 — 随时可用（渲染逐页目检＋源码量测，review_mode 记 `claude_full`、manifest 注明 supplementary_review）
   - Grok／豆包文本模型／DeepSeek — 宿主已配置对应 API 或连接器时可用；未配置而用户点名时，先完成接入再审（豆包注意区分语音 TTS 与文本模型）
@@ -64,7 +64,7 @@ Phase 7 完成、SVG 包交付后，进入 Phase 8。
    - 单值 `stroke-dasharray="4"` → 规范化为 `"4 4"`（SVG 语义等值，零视觉变化）。
 5. 导出：`$PY_PPTX $MS/svg_to_pptx.py <proj> --no-notes`，产物 `exports/<proj>_<HHMMSS>.pptx`；postflight `passed-with-warnings` 可接受，`quality_gate=passed` 为准。
 6. 注入演讲备注：`$PY_PPTX <FORGE>/tools/inject_notes.py <导出.pptx> <RUN_DIR>/output/speaker-notes.md <定稿.pptx>`。
-7. 回渲验收：把成品 PPTX 渲成图，抽验**封面＋最密一页＋本轮动过修复的页**，与 SVG 渲染对照，并用 python-pptx 复开核对页数与备注页数。渲染器按宿主选：**Windows 且装了桌面版 PowerPoint 时，优先用 PowerPoint 本身渲染**（COM 把幻灯片导出为图片即可）——它对 `wrap="none"` 等文本语义的处理与最终打开环境一致，是回渲的基准；**LibreOffice 不遵守 `wrap="none"`，会把单行文本渲成假折行，不能据此判定 PPTX 有问题**。其它宿主用 LibreOffice 转 PDF（**必须带独立 profile**：`soffice -env:UserInstallation=file:///<临时目录>/lo-profile --headless --convert-to pdf …`；用默认 profile 在部分 Windows 环境会崩（0xC0000409），也会与已打开的 LibreOffice 实例冲突）→ 再用 PyMuPDF（pip 依赖，已在 requirements.txt 里，无需另装 poppler/pdftoppm）逐页渲成 PNG。无任何可用渲染器时至少做页数/备注核对，并如实说明未回渲。
+7. 回渲验收：把成品 PPTX 渲成图，抽验**封面＋最密一页＋本轮动过修复的页**，与 SVG 渲染对照，并用 python-pptx 复开核对页数与备注页数。渲染器按宿主选：**Windows 且装了桌面版 PowerPoint 时，优先用 PowerPoint 本身渲染**（COM 把幻灯片导出为图片即可）——它对 `wrap="none"` 等文本语义的处理与最终打开环境一致，是回渲的基准；**LibreOffice 不遵守 `wrap="none"`，会把单行文本渲成假折行，不能据此判定 PPTX 有问题**。其它宿主用 LibreOffice 转 PDF（**必须带独立 profile**：`soffice -env:UserInstallation=file:///<临时目录>/lo-profile --headless --convert-to pdf …`；用默认 profile 在部分 Windows 环境会崩（0xC0000409），也会与已打开的 LibreOffice 实例冲突）→ 再以 `$PY_PPTX` 调 PyMuPDF（pip 依赖，已在 requirements.txt 里，无需另装 poppler/pdftoppm）逐页渲成 PNG。无任何可用渲染器时至少做页数/备注核对，并如实说明未回渲。
 8. 定稿落位：成品 PPTX 拷入 `<RUN_DIR>/output/`，中文交付名，作附件交付；工程目录保留供后续定点改稿。
 
 转制口径如实告知用户：几何 1:1 量测转原生形状、文字可编辑；字体按 SVG 字体栈写入（DM Sans/Inter＋PingFang/微软雅黑回退），无该字体的机器自动回退；卡片阴影等效果由编译器近似。

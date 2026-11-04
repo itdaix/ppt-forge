@@ -21,13 +21,13 @@
 ## 安装
 
 1. 把 `ppt-forge` 整个文件夹放进你的技能目录。
-2. 装 Python 依赖（转制 PPTX 用）：
+2. 装 Python 依赖（转制与回渲抽验用）：
    `pip install -r ppt-forge/requirements.txt`
    （受 PEP 668 限制的系统先建 venv 再装，venv 里的 python 即技能里说的 PY_PPTX。）
 3. 审查用 Gemini 时，各自申请 API Key 并设置环境变量：
    在 https://aistudio.google.com/apikey 建 Key，然后 `export GEMINI_API_KEY=<你的Key>`。
-   不配 Key 也能用：审查环节可由使用人确认后改用其它模型或 Muse 自审（流程见 SKILL.md）。
-4. （可选）装 LibreOffice，用于转制后把 PPTX 转成 PDF 回渲抽验；出图用的 PyMuPDF 已在 `requirements.txt` 里、随第 2 步 pip 一并装好，不需要另外装 poppler / pdftoppm。没有 LibreOffice 也能出 PPTX，只是少一道目检。
+   不配 Key 也能用：审查环节可由使用人确认后改用其它模型或宿主模型自审（流程见 SKILL.md）。
+4. （可选）回渲抽验的渲染器，二选一即可：Windows 且装了桌面版 PowerPoint 的，优先用 PowerPoint 本身渲图（最准，不必装 LibreOffice）；其它环境装 LibreOffice 把 PPTX 转成 PDF，再由 PyMuPDF 出图（PyMuPDF 已在 `requirements.txt` 里、随第 2 步 pip 一并装好，不需要另外装 poppler / pdftoppm）。都没有也能出 PPTX，只是少一道目检。
 
 ## 使用
 
@@ -63,7 +63,7 @@
 
 技能内置了「添加自定义风格」指令，加新风格不需要你动手写任何文件：
 
-把参考材料发给 Muse——一份现成的 PPT、几张截图，或品牌色板/规范——再说一句「**加一套风格，叫 XX**」（名字没想好就让它拟一个，你确认即可）。它会自动跑完：实测提取参考里的主题色、字体、卡片样式等参数（PPT 就解包读主题与母版，不凭感觉编）→ 生成风格文件 → 在风格库里完成注册 → 处理 logo 等图片资产 → 在上面的风格列表里补一行 → 用新风格出一页样张。
+把参考材料发给你的 AI 助手——一份现成的 PPT、几张截图，或品牌色板/规范——再说一句「**加一套风格，叫 XX**」（名字没想好就让它拟一个，你确认即可）。它会自动跑完：实测提取参考里的主题色、字体、卡片样式等参数（PPT 就解包读主题与母版，不凭感觉编）→ 生成风格文件 → 在风格库里完成注册 → 处理 logo 等图片资产 → 在上面的风格列表里补一行 → 用新风格出一页样张。
 
 你全程只需要做三件事：**给材料、定名字、看样张点头**。包内的 thinkway 就是这样从一份公司介绍 PPT 里量出来加进去的。
 
@@ -75,7 +75,7 @@
 - `vendor/NOTICE.md` — 组件归属与许可证说明
 - `tools/` — gemini_api.py（审查传输）、inject_notes.py（备注注入）
 - `references/spec-lock-flat-template.md` — 转制锁模板
-- `requirements.txt` — python-pptx
+- `requirements.txt` — python-pptx、PyMuPDF
 - `LICENSE` — MIT 许可证（上游组件的归属与许可证见 `vendor/NOTICE.md`）
 
 上游：ppt-agent https://github.com/zengwenliang416/ppt-agent （MIT）；ppt-master https://github.com/hugohe3/ppt-master （MIT）。
