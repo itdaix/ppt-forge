@@ -27,7 +27,7 @@
 3. 审查用 Gemini 时，各自申请 API Key 并设置环境变量：
    在 https://aistudio.google.com/apikey 建 Key，然后 `export GEMINI_API_KEY=<你的Key>`。
    不配 Key 也能用：审查环节可由使用人确认后改用其它模型或 Muse 自审（流程见 SKILL.md）。
-4. （可选）装 LibreOffice，用于转制后的回渲抽验；回渲出图用 pdftoppm（属 poppler 工具包，Windows / macOS / Linux 均有对应安装）。pdftoppm 没有时可用 LibreOffice 转成 PDF 后目检；都没有也能出 PPTX，只是少一道目检。
+4. （可选）装 LibreOffice，用于转制后把 PPTX 转成 PDF 回渲抽验；出图用的 PyMuPDF 已在 `requirements.txt` 里、随第 2 步 pip 一并装好，不需要另外装 poppler / pdftoppm。没有 LibreOffice 也能出 PPTX，只是少一道目检。
 
 ## 使用
 

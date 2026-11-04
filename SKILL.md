@@ -66,7 +66,7 @@ Phase 7 完成、SVG 包交付后，进入 Phase 8。
    - 单值 `stroke-dasharray="4"` → 规范化为 `"4 4"`（SVG 语义等值，零视觉变化）。
 5. 导出：`$PY_PPTX $MS/svg_to_pptx.py <proj> --no-notes`，产物 `exports/<proj>_<HHMMSS>.pptx`；postflight `passed-with-warnings` 可接受，`quality_gate=passed` 为准。
 6. 注入演讲备注：`$PY_PPTX <FORGE>/tools/inject_notes.py <导出.pptx> <RUN_DIR>/output/speaker-notes.md <定稿.pptx>`。
-7. 回渲验收：LibreOffice 转 PDF → pdftoppm 抽验**封面＋最密一页＋本轮动过修复的页**，与 SVG 渲染对照；python-pptx 复开核对页数与备注页数（无 LibreOffice 时至少做页数/备注核对，并如实说明未回渲）。
+7. 回渲验收：LibreOffice 转 PDF → 用 PyMuPDF（pip 依赖，已在 requirements.txt 里，无需另装 poppler/pdftoppm）把 PDF 逐页渲成 PNG，抽验**封面＋最密一页＋本轮动过修复的页**，与 SVG 渲染对照；python-pptx 复开核对页数与备注页数（无 LibreOffice 时至少做页数/备注核对，并如实说明未回渲）。
 8. 定稿落位：成品 PPTX 拷入 `<RUN_DIR>/output/`，中文交付名，作附件交付；工程目录保留供后续定点改稿。
 
 转制口径如实告知用户：几何 1:1 量测转原生形状、文字可编辑；字体按 SVG 字体栈写入（DM Sans/Inter＋PingFang/微软雅黑回退），无该字体的机器自动回退；卡片阴影等效果由编译器近似。
