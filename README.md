@@ -1,8 +1,10 @@
 # ppt-forge
 
 ## 介绍
+<img width="2240" height="1400" alt="image" src="https://github.com/user-attachments/assets/2445ad56-0784-4bb5-841b-2e1f6de2a22f" />
+<img width="2240" height="1400" alt="image" src="https://github.com/user-attachments/assets/12e573de-15fe-4289-8218-2df8bcc2799e" />
 
-ppt-forge 是一个用于生成PPT的SKILL。
+
 
 | 阶段 | 说明 | 人工介入 |
 |---|---|---|
