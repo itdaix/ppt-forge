@@ -59,6 +59,21 @@
 | intuition-machine 直觉机器 | 深色＋荧光绿粉，AI 神经感 | AI 与前沿科技主题分享 |
 | pixel-art 像素风 | 8-bit 像素，复古好玩 | 游戏主题、趣味活动、年轻向内部活动 |
 
+## 添加新风格
+
+想给风格库里加一套新风格（比如照着某个现成模板做），两种办法：
+
+**办法一：让 Muse 照着参考材料建（推荐）**
+把参考材料发给 Muse——一份现成的 PPT、几张截图，或品牌色板/规范——说「照这个加一套风格，叫 XX」。它会实测提取主题色、字体、卡片样式等参数，生成风格文件并完成注册。包内的 thinkway 就是这样从一份公司介绍 PPT 里量出来的。
+
+**办法二：自己写风格文件**
+
+1. 在 `vendor/ppt-agent/shared/references/styles/` 下新建 `<风格名>.yaml`，照任意现有风格（如 `business.yaml`）的 9 段结构填：`name`（显示名）、`mood`（一句气质描述）、`color_scheme`（色板）、`typography`（字体与字号）、`card_style`（卡片样式）、`gradients`（渐变）、`elevation`（阴影）、`decoration`（装饰元素）、`slide_type_overrides`（封面、目录、尾页等特殊页的覆盖规则）。带公司 logo、页眉页脚这类固定元素的，再加一段 `brand_furniture` 写明每页的画法。
+2. 在 `vendor/ppt-agent/shared/index.json` 的 `resources` 里注册一条：`id` 写 `style-<风格名>`、`domain` 写 `style`、`file_path` 写 `styles/<风格名>.yaml`，再填 `keywords` / `description` / `use_cases`，并把 `total_count.styles` 加 1。**少了这步，流程里选不到这套风格。**
+3. 有 logo 等图片资产的，放进 `vendor/ppt-agent/shared/assets/<风格名>/`。注意：生成的页面里图片必须以 base64 形式嵌进 SVG，外链图片在渲染时会被丢弃。
+
+加完后在上面的风格列表里补一行，并用新风格跑一页样张目检，确认效果再正式使用。
+
 ## 包内结构
 
 - `SKILL.md` — 流程本体（唯一入口）
