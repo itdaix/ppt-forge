@@ -27,7 +27,7 @@
 3. 审查用 Gemini 时，各自申请 API Key 并设置环境变量：
    在 https://aistudio.google.com/apikey 建 Key，然后 `export GEMINI_API_KEY=<你的Key>`。
    不配 Key 也能用：审查环节可由使用人确认后改用其它模型或 Muse 自审（流程见 SKILL.md）。
-4. （可选）装 LibreOffice，用于转制后的回渲抽验；没有也能出 PPTX，只是少一道目检。
+4. （可选）装 LibreOffice，用于转制后的回渲抽验；回渲出图用 pdftoppm（属 poppler 工具包，Windows / macOS / Linux 均有对应安装）。pdftoppm 没有时可用 LibreOffice 转成 PDF 后目检；都没有也能出 PPTX，只是少一道目检。
 
 ## 使用
 
@@ -76,5 +76,6 @@
 - `tools/` — gemini_api.py（审查传输）、inject_notes.py（备注注入）
 - `references/spec-lock-flat-template.md` — 转制锁模板
 - `requirements.txt` — python-pptx
+- `LICENSE` — MIT 许可证（上游组件的归属与许可证见 `vendor/NOTICE.md`）
 
 上游：ppt-agent https://github.com/zengwenliang416/ppt-agent （MIT）；ppt-master https://github.com/hugohe3/ppt-master （MIT）。

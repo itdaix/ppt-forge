@@ -14,6 +14,8 @@ description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 ×
 - `RUN_DIR`＝`<工作区>/openspec/changes/<change-id>`（工作区产物目录约定）。
 - Gemini 审查调用＝`python3 <FORGE>/tools/gemini_api.py`，API Key 走环境变量 `GEMINI_API_KEY`（各自在 https://aistudio.google.com/apikey 申请）。
 
+- **Shell 口径**：本技能的命令以 macOS/Linux 写法为准；Windows 环境执行时按 PowerShell 转译：`python3`→`python`、`cp`→`Copy-Item`、`export A=B`→`$env:A="B"`，路径与通配符同理处理。
+
 包内结构：
 - `vendor/ppt-agent/`：干活主体的工作流原件——`AGENT_WORKFLOW.md`（宿主映射与阶段总纲）、`references/workflow.md`（阶段细节权威）、`references/agents/`（四角色）、`references/roles/reviewer.md`（审查角色契约：量规／建议分类／输出格式）、`shared/`（18 种风格 YAML、提示词注册表、预览模板）
 - `vendor/ppt-master/scripts/`：仅转制链脚本闭包（project_manager / svg_quality_checker / svg_to_pptx 及依赖）
@@ -37,7 +39,7 @@ description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 ×
 质量门（与审查量规一致）：加权 ≥7.0、布局 ≥6、可读性 ≥6、无 Critical；修复路由 full_rethink ≤1 轮、layout_restructure/content_reduction ≤2 轮、attribute_change ≤1 轮；全页审完才许整体审查，整体只自动修 priority-1、最多重跑 1 次。
 
 审查：多模型制，用户确认（2026-11-04 用户定版；同日晚间改定为每趟开工前确认）：
-- **Phase 6 开工前先确认审查模型（每趟必走，不确认不开审）**：把可选引擎摆给用户——默认推荐 **Gemini**（`tools/gemini_api.py ask --prompt-file <审查提示词+SVG全文>`，模型 `gemini-3-flash-preview`，**免费层约 20 次/天**；逐页「审查＋修复＋复审」约 3 次/页，先按页数算审查预算、页数多的先向用户说明额度安排）；备选见下池。用户点名哪个就用哪个审全程。
+- **Phase 6 开工前先确认审查模型（每趟必走，不确认不开审）**：把可选引擎摆给用户——默认推荐 **Gemini**（`tools/gemini_api.py ask --prompt-file <审查提示词+SVG全文>`，模型 `gemini-3-flash-preview`，**免费层约 20 次/天**；逐页「审查＋修复＋复审」约 3 次/页，先按页数算审查预算、页数多的先向用户说明额度安排；免费层一天大约够审 6 页，超了要提前商量分两天审或开付费，别审到一半断档）；备选见下池。用户点名哪个就用哪个审全程。
 - **选定引擎中途不通或额度耗尽 → 停下来再问用户，不许自作主张换、也不许直接跳 Muse 自审**：由用户点名确认后才换，量规不变，分数标注实际引擎。备选池与接通状态（接通状态因环境与时间而异，下为已知情形，实际使用前须复验）：
   - 其它 Gemini 模型 — 同一 helper 换 `--model`，先 `models` 探活（2.5 代对新用户关闭、Pro 免费额度为 0，以实测为准）
   - Muse 自审 — 随时可用（渲染逐页目检＋源码量测，review_mode 记 `claude_full`、manifest 注明 supplementary_review）
