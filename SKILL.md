@@ -1,6 +1,6 @@
 ---
 name: ppt-forge
-description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 × 多模型审核 × ppt-master 只取转制，全部组件随包 vendor 分发，装这一个包即可，不需要再装 ppt-agent / ppt-master）：材料/主题 → 需求确认（用户把关）→ 大纲规划（用户审批 Hard Stop）→ ppt-agent 逐页 SVG 生成 → 逐页审查修复＋整体审查（审查引擎在 Phase 6 开工前先由用户确认：默认推荐 Gemini，备选 Grok / 豆包 / DeepSeek / 其它 Gemini 模型 / Muse 自审；选定引擎中途不通时再停下问用户换哪个）→ Phase 7 组装并交付 SVG 包 → Phase 8 生成 PPT：转制原生可编辑 PPTX（包内 vendor 的 svg_to_pptx 转制链）前先请用户确认，不直接生成 → 双交付（SVG 包＋PPTX，含演讲备注）。用户要做 PPT、演示、汇报材料时默认且严格按此流程跑；风格不预设默认，在需求确认时由用户确认，技能只给推荐。团队安装与依赖见包内 README.md。
+description: PPT 全流程融合技能·自包含版（ppt-agent 干活主体 × 多模型审核 × ppt-master 只取转制，全部组件随包 vendor 分发，装这一个包即可，不需要再装 ppt-agent / ppt-master）：材料/主题 → 需求确认（用户把关）→ 大纲规划（用户审批 Hard Stop）→ ppt-agent 逐页 SVG 生成 → 逐页审查修复＋整体审查（审查引擎在 Phase 6 开工前先由用户确认：默认推荐 Gemini，备选 Grok / 豆包 / DeepSeek / 其它 Gemini 模型 / Muse 自审；选定引擎中途不通时再停下问用户换哪个）→ Phase 7 组装并交付 SVG 包 → Phase 8 生成 PPT：转制原生可编辑 PPTX（包内 vendor 的 svg_to_pptx 转制链）前先请用户确认，不直接生成 → 双交付（SVG 包＋PPTX，含演讲备注）。用户要做 PPT、演示、汇报材料时默认且严格按此流程跑；风格不预设默认，在需求确认时由用户确认，技能只给推荐。用户给参考 PPT／截图／色板说「加一套风格」时，不走做 PPT 流程，按本技能「添加自定义风格」指令实测提取参数、建风格文件、完成注册并出样张验证。团队安装与依赖见包内 README.md。
 ---
 
 # PPT Forge（PPT 锻造坊 · 全融合自包含版）
@@ -68,6 +68,18 @@ Phase 7 完成、SVG 包交付后，进入 Phase 8。
 8. 定稿落位：成品 PPTX 拷入 `<RUN_DIR>/output/`，中文交付名，作附件交付；工程目录保留供后续定点改稿。
 
 转制口径如实告知用户：几何 1:1 量测转原生形状、文字可编辑；字体按 SVG 字体栈写入（DM Sans/Inter＋PingFang/微软雅黑回退），无该字体的机器自动回退；卡片阴影等效果由编译器近似。
+
+## 指令：添加自定义风格（2026-11-04 用户要求加入，与 README「添加新风格」一节对应）
+
+用户给参考材料（现成 PPT／截图／色板／品牌规范）并说「加一套风格」「添加风格」「照这个做一套风格，叫 XX」一类的话时，**不走上面的做 PPT 流程**，直接按本节把这套风格建进风格库：
+
+1. **定名**：用户给了名字就用它（英文小写连字符作文件名与风格 id）；没给就按来源拟一个，先让用户确认。
+2. **实测提取，不许凭感觉编参数**：参考是 PPTX → 解包读主题 XML（theme 配色与字体）、母版 XML（页眉页脚版式）与全稿颜色／字号统计；是截图或色板 → 取色实测。参数来源在交付时说清（thinkway 即此法建成：以原稿 theme 为准，deck 里的手工色不算主题色）。
+3. **写风格文件**：`vendor/ppt-agent/shared/references/styles/<名>.yaml`，9 段结构（name／mood／color_scheme／typography／card_style／gradients／elevation／decoration／slide_type_overrides）；参考里有 logo、页眉页脚等固定元素的，加 `brand_furniture` 段写明每类页面（内容／目录／封面／尾页）的画法。
+4. **注册**：`vendor/ppt-agent/shared/index.json` 的 `resources` 加一条（id＝`style-<名>`、domain＝`style`、file_path＝`styles/<名>.yaml`、keywords／description／use_cases），`total_count.styles` +1。**漏注册＝Phase 2 选不到这套风格，等于没加。**
+5. **资产**：logo 等图片放 `vendor/ppt-agent/shared/assets/<名>/`；页面里引用必须以 base64 data URI 嵌入（外链在 LibreOffice 渲染时会被丢弃）；从 deck 提取的 PNG 用到深色底上之前，先查有没有低透明度残留描边。
+6. **补文档**：包内 `README.md`「风格列表」表补一行（风格名／长什么样／建议用在什么 PPT 上）。
+7. **出样张验证**：用新风格生成一页样张（优先目录页或内容页，最能看出色板与品牌家具），渲染目检后把样张交给用户确认；**用户没点头前不算加完**。
 
 ## 首跑记录
 
