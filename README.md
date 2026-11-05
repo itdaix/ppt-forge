@@ -38,18 +38,20 @@
 
 包内有 18 种风格（`vendor/ppt-agent/shared/references/styles/*.yaml`）。**没有默认风格**：每次做 PPT 时在 Phase 2 需求确认那一步选定，技能会按材料性质给出推荐和理由，**由你确认选哪套**，技能不能替你定。
 
+其中带 **⭐推荐** 的 4 套（business、blueprint、scientific、notion）是用户本人逐张看过示例图后认可的常用风格，Phase 2 推荐时优先从这几套里挑。
+
 | 风格 | 长什么样 | 建议用在什么 PPT 上 | 示例图 |
 |---|---|---|---|
-| business 商务专业 | 藏蓝＋橙，圆角卡片，干净权威 | 一般工作汇报、项目启动会、方案汇报——没特殊要求时的稳妥之选 | [查看](examples/style-demos/business.png) |
+| business 商务专业 ⭐推荐 | 藏蓝＋橙，圆角卡片，干净权威 | 一般工作汇报、项目启动会、方案汇报——没特殊要求时的稳妥之选 | [查看](examples/style-demos/business.png) |
 | thinkway 九慧公司风 | 青蓝 #117598＋金黄 #FFC000、微软雅黑、直角扁平卡片，自带品牌家具规范与 logo 资产 | 上海九慧（Thinkway）的公司材料、对外正式场合 | [查看](examples/style-demos/thinkway.png) |
-| blueprint 蓝图 | 工程制图风，网格与线条感强 | 技术方案、系统架构、工程类汇报 | [查看](examples/style-demos/blueprint.png) |
+| blueprint 蓝图 ⭐推荐 | 工程制图风，网格与线条感强 | 技术方案、系统架构、工程类汇报 | [查看](examples/style-demos/blueprint.png) |
 | tech 科技现代 | 深色底＋亮色点缀，科技感 | 产品发布、技术分享、科技主题 | [查看](examples/style-demos/tech.png) |
 | minimal 极简 | 大量留白，元素极少 | 高层汇报、品牌展示，内容少而精的场合 | [查看](examples/style-demos/minimal.png) |
 | editorial-infographic 编辑信息图 | 杂志式排版，擅长数据叙事 | 数据报告、市场分析、行业洞察 | [查看](examples/style-demos/editorial-infographic.png) |
-| scientific 科学学术 | 学术蓝，数据结构严谨 | 研究报告、学术答辩、实验数据汇报 | [查看](examples/style-demos/scientific.png) |
+| scientific 科学学术 ⭐推荐 | 学术蓝，数据结构严谨 | 研究报告、学术答辩、实验数据汇报 | [查看](examples/style-demos/scientific.png) |
 | bold-editorial 大胆编辑 | 超大标题、强对比，杂志封面感 | 品牌故事、观点输出、发布会 | [查看](examples/style-demos/bold-editorial.png) |
 | creative 创意大胆 | 高饱和配色，构图动感 | 创意提案、活动策划、年轻向主题 | [查看](examples/style-demos/creative.png) |
-| notion 文档风 | 像 Notion 文档，层级清楚 | 内部知识分享、流程说明、培训材料 | [查看](examples/style-demos/notion.png) |
+| notion 文档风 ⭐推荐 | 像 Notion 文档，层级清楚 | 内部知识分享、流程说明、培训材料 | [查看](examples/style-demos/notion.png) |
 | chalkboard 黑板风 | 黑板粉笔手绘感 | 教学课件、课堂类培训 | [查看](examples/style-demos/chalkboard.png) |
 | sketch-notes 手绘笔记 | 速写涂鸦风，轻松随意 | 头脑风暴、创意讨论、非正式分享 | [查看](examples/style-demos/sketch-notes.png) |
 | vector-illustration 矢量插画 | 扁平几何插画，色彩明快 | 产品介绍、轻松科普、亲子主题 | [查看](examples/style-demos/vector-illustration.png) |
