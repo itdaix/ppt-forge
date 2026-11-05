@@ -21,7 +21,7 @@ color_scheme:
   text: "#262626"         # Near-black body text (deck practice; theme dk1 itself is #000000)
   muted: "#7f7f7f"        # Footer gray (page number / company name)
   line: "#bfbfbf"         # Theme dk2 — hairlines, footer rule, card borders
-  card_bg: "#e6f6fc"      # Pale blue tint (theme lt2)
+  card_bg: "#f5f5f5"      # Very faint gray — user-directed 2026-11-05 (annotated demo: card bg should be just a hint of gray, replacing pale blue tint #e6f6fc)
   hyperlink: "#4747ff"    # Theme hlink
   hyperlink_followed: "#7030a0"  # Theme folHlink
   chart_colors:            # Theme order; [0]=primary
@@ -48,7 +48,7 @@ card_style:
 
 gradients:
   hero_bg: "linear-gradient(135deg, #117598 0%, #0b4f66 100%)"   # Deepened primary (derived; deck covers are photo-based)
-  card_highlight: "linear-gradient(180deg, #e6f6fc 0%, #ffffff 100%)"
+  card_highlight: "linear-gradient(180deg, #f5f5f5 0%, #ffffff 100%)"
 
 elevation:
   shadow_sm: "0 1px 2px rgba(0,0,0,0.05)"
